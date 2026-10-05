@@ -10,6 +10,12 @@ import java.util.Scanner;
  * @author Naila Salsa
  */
 public class SMKN {
+    // METHOD PROSES
+    public static void prosesNovel(Novel novel) {
+        System.out.println("\n--- Informasi Novel ---");
+        novel.tampilkanInfo();
+    }
+    
      // method overloading (pencarian 1): parameter string
     public static void cariNovel(String judul, Novel[] daftarNovel, int jumlahNovel) {
         System.out.println("Mencari novel dengan Judul: " + judul);
@@ -18,7 +24,7 @@ public class SMKN {
 
         for (int i = 0; i < jumlahNovel; i++) {
             if (daftarNovel[i].getJudul().equalsIgnoreCase(judul)) {
-                System.out.print("- Ditemukan: ");
+                
                 daftarNovel[i].tampilkanInfo();
                 ditemukan = true;
             }
@@ -78,12 +84,13 @@ public class SMKN {
                             System.out.println("\n-- Pilih Jenis Novel --");
                             System.out.println("1. Novel Fisik");
                             System.out.println("2. Novel Digital");
-                            System.out.print("Pilihan (1/2): ");
+                            System.out.println("3. Novel Audio");
+                            System.out.print("Pilihan (1/2/3): ");
                             
                             int jenis = scanner.nextInt();
                             scanner.nextLine();
                             
-                            if (jenis == 1 || jenis == 2) {
+                            if (jenis == 1 || jenis == 2 || jenis == 3) {
                                 
                                 System.out.print("Masukkan Judul Novel: ");
                                 String judulBaru = scanner.nextLine();
@@ -111,7 +118,7 @@ public class SMKN {
                                     
                                     daftarNovel[jumlahNovel] = novelBaru;
                                 // novel digital
-                                } else {
+                                } else if (jenis == 2) {
                                     System.out.print("Masukkan Format File: ");
                                     String formatFile = scanner.nextLine();
                                     
@@ -120,6 +127,16 @@ public class SMKN {
                                     scanner.nextLine();
                                     
                                     Novel novelBaru = new NovelDigital(judulBaru, penulisBaru, genreBaru, tahunBaru, formatFile, ukuranFile);
+                                    daftarNovel[jumlahNovel] = novelBaru;
+                                } else if (jenis == 3) {
+                                    System.out.print("Masukkan Durasi Audio (menit): ");
+                                    int durasiMenit = scanner.nextInt();
+                                    scanner.nextLine();
+                                    
+                                    System.out.print("Masukkan Nama Narator: ");
+                                    String narator = scanner.nextLine();
+                                    
+                                    Novel novelBaru = new NovelAudio(judulBaru, penulisBaru, genreBaru, tahunBaru, durasiMenit, narator);
                                     daftarNovel[jumlahNovel] = novelBaru;
                                 }
                                 

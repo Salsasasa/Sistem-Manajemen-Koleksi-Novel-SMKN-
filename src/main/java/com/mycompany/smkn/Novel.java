@@ -72,6 +72,7 @@ public class Novel {
         }
     }
 
+    // method yang akan di override subclass
     public void tampilkanInfo() {
         System.out.printf("Judul: %-15s | Penulis: %-15s | Genre: %-12s | Tahun: %d%n",
             this.judul,
