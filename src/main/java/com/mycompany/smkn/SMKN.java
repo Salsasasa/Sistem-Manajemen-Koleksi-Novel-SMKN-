@@ -151,25 +151,37 @@ public class SMKN {
                         }
                     }
                     // tampilkan semua novel
-                    case 2 -> {
-                        System.out.println("\n--- DAFTAR KOLEKSI NOVEL ---");
-                    
+                    case 2 -> {System.out.println("\n--- DAFTAR KOLEKSI NOVEL ---");
+
                         if (jumlahNovel == 0) {
                             System.out.println("Belum ada novel yang tersimpan");
                         } else {
-                            for (int i = 0; i < jumlahNovel; i++){
+                            for (int i = 0; i < jumlahNovel; i++) {
                                 System.out.println("\nNovel ke-" + (i + 1));
-                                
-                                daftarNovel[i].tampilkanInfo();
-                                
+
+                                if (daftarNovel[i] instanceof NovelFisik) {
+                                    ((NovelFisik) daftarNovel[i]).tampilkanInfo();
+
+                                } else if (daftarNovel[i] instanceof NovelDigital) {
+                                    ((NovelDigital) daftarNovel[i]).tampilkanInfo();
+
+                                } else if (daftarNovel[i] instanceof NovelAudio) {
+                                    ((NovelAudio) daftarNovel[i]).tampilkanInfo();
+
+                                } else {
+                                    System.out.println("Jenis novel tidak dikenali.");
+                                }
+
                                 System.out.println("############################");
                             }
-                            // variabel statik
-                            System.out.println("\nTotal Novel yang Terdatar: " + Novel.totalNovelBerhasilDibuat);
-                        }             
-                    System.out.print("\nTekan Enter untuk melanjutkan...");
-                    scanner.nextLine();    
-                    }   
+
+                            // Variabel statik
+                            System.out.println( "\nTotal Novel yang Terdaftar: " + Novel.totalNovelBerhasilDibuat);
+                        }
+
+                        System.out.print("\nTekan Enter untuk melanjutkan...");
+                        scanner.nextLine();
+                    }
                     // cari novel
                     case 3 -> {
                         System.out.println("\n-- Fitur Cari Novel --");

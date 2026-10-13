@@ -8,7 +8,7 @@ package com.mycompany.smkn;
  *
  * @author Naila Salsa
  */
-public class Novel {
+public abstract class Novel {
     private String judul;
     private String penulis;
     private String genre;
@@ -73,12 +73,9 @@ public class Novel {
     }
 
     // method yang akan di override subclass
-    public void tampilkanInfo() {
-        System.out.printf("Judul: %-15s | Penulis: %-15s | Genre: %-12s | Tahun: %d%n",
-            this.judul,
-            this.penulis,
-            this.genre,
-            this.tahunTerbit
-        );
+    public abstract void tampilkanInfo();
+    
+    public void tampilkanKategori() {
+        System.out.println("Kategori: Koleksi Novel");
     }
 }

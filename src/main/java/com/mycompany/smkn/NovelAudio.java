@@ -8,50 +8,60 @@ package com.mycompany.smkn;
  *
  * @author Naila Salsa
  */
-public class NovelAudio extends Novel {
+public class NovelAudio extends Novel implements DapatDiberiRating, DapatDikelola {
     private int durasiMenit;
     private String narator;
-    
-    public NovelAudio(String judul, String penulis, String genre,int tahunTerbit, int durasiMenit, String narator) {
+    private double rating;
+    private boolean sudahDibaca;
+
+    public NovelAudio(String judul, String penulis, String genre, int tahunTerbit,int durasiMenit, String narator) {
         super(judul, penulis, genre, tahunTerbit);
         this.durasiMenit = durasiMenit;
         this.narator = narator;
-    }
-    
-    public int getDurasiMenit() {
-        return this.durasiMenit;
-    }
-
-    public void setDurasiMenit(int durasiMenit) {
-        if (durasiMenit > 0) {
-            this.durasiMenit = durasiMenit;
-        } else {
-            System.out.println("Durasi tidak valid!");
-        }
-    }
-
-    public String getNarator() {
-        return this.narator;
-    }
-
-    public void setNarator(String narator) {
-        if (narator != null && !narator.isEmpty()) {
-            this.narator = narator;
-        } else {
-            System.out.println("Narator tidak valid!");
-        }
+        this.rating = 0.0;
+        this.sudahDibaca = false;
     }
 
     @Override
     public void tampilkanInfo() {
-        System.out.printf("[Novel Audio] Judul: %-15s | Penulis: %-15s | Genre: %-12s | Tahun: %d | Durasi: %d menit | Narator: %s%n",
-            this.getJudul(),
-            this.getPenulis(),
-            this.getGenre(),
-            this.getTahunTerbit(),
-            this.durasiMenit,
-            this.narator
-        );
-    
-    }   
+        System.out.println("Jenis: Novel Audio");
+        System.out.println("Judul: " + getJudul());
+        System.out.println("Penulis: " + getPenulis());
+        System.out.println("Genre: " + getGenre());
+        System.out.println("Tahun Terbit: " + getTahunTerbit());
+        System.out.println("Durasi: " + durasiMenit + " menit");
+        System.out.println("Narator: " + narator);
+        System.out.println("Rating: " + rating);
+        System.out.println("Status Dibaca: "
+                + (sudahDibaca ? "Sudah" : "Belum"));
+    }
+
+    @Override
+    public void beriRating(double rating) {
+        if (rating >= 1 && rating <= 5) {
+            this.rating = rating;
+        } else {
+            System.out.println("Rating harus antara 1 sampai 5.");
+        }
+    }
+
+    @Override
+    public double getRating() {
+        return rating;
+    }
+
+    @Override
+    public void tandaiDibaca() {
+        sudahDibaca = true;
+    }
+
+    @Override
+    public void tandaiBelumDibaca() {
+        sudahDibaca = false;
+    }
+
+    @Override
+    public boolean isSudahDibaca() {
+        return sudahDibaca;
+    }
 }

@@ -8,9 +8,11 @@ package com.mycompany.smkn;
  *
  * @author Naila Salsa
  */
-public class NovelFisik extends Novel {
+public class NovelFisik extends Novel implements DapatDiberiRating, DapatDikelola{
     private int jumlahHalaman;
     private String kondisi;
+    private double rating;
+    private boolean sudahDibaca;
 
     public NovelFisik(String judul, String penulis, String genre, int tahunTerbit, int jumlahHalaman, String kondisi) {
         super(judul, penulis, genre, tahunTerbit);
@@ -46,16 +48,45 @@ public class NovelFisik extends Novel {
         }
     }
 
-    // overriding method dari Novel
     @Override
     public void tampilkanInfo() {
-        System.out.printf("[Novel Fisik] Judul: %-15s | Penulis: %-15s | Genre: %-10s | Tahun: %d | Halaman: %d | Kondisi: %s%n",
-            this.getJudul(),
-            this.getPenulis(),
-            this.getGenre(),
-            this.getTahunTerbit(),
-            this.jumlahHalaman,
-            this.kondisi
-        );
+    System.out.println("Judul          : " + getJudul());
+    System.out.println("Penulis        : " + getPenulis());
+    System.out.println("Genre          : " + getGenre());
+    System.out.println("Tahun Terbit   : " + getTahunTerbit());
+    System.out.println("Jumlah Halaman : " + jumlahHalaman);
+    System.out.println("Kondisi        : " + kondisi);
+    System.out.println("Rating         : " + rating);
+    System.out.println("Status Baca    : " + (sudahDibaca ? "Sudah Dibaca" : "Belum Dibaca"));
     }
+    
+    @Override
+    public void beriRating(double rating) {
+        if (rating >= 1 && rating <= 5) {
+            this.rating = rating;
+        } else {
+            System.out.println("Rating harus antara 1 sampai 5.");
+        }
+    }
+
+    @Override
+    public double getRating() {
+        return rating;
+    }
+
+    @Override
+    public void tandaiDibaca() {
+        sudahDibaca = true;
+    }
+
+    @Override
+    public void tandaiBelumDibaca() {
+        sudahDibaca = false;
+    }
+
+    @Override
+    public boolean isSudahDibaca() {
+        return sudahDibaca;
+    }
+   
 }
