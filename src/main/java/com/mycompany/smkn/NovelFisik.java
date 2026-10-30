@@ -14,8 +14,11 @@ public class NovelFisik extends Novel implements DapatDiberiRating, DapatDikelol
     private double rating;
     private boolean sudahDibaca;
 
-    public NovelFisik(String judul, String penulis, String genre, int tahunTerbit, int jumlahHalaman, String kondisi) {
+    public NovelFisik(String judul, String penulis, String genre, int tahunTerbit, int jumlahHalaman, String kondisi) throws Exception{
         super(judul, penulis, genre, tahunTerbit);
+        if (tahunTerbit < 1 || tahunTerbit > 2026) {
+            throw new Exception("Tahun terbit harus berada pada rentang 1–2026.");
+        }
         this.jumlahHalaman = jumlahHalaman;
         this.kondisi = kondisi;
     }

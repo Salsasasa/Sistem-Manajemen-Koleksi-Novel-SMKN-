@@ -16,7 +16,11 @@ public abstract class Novel {
 
     public static int totalNovelBerhasilDibuat = 0;
 
-    public Novel(String judul, String penulis, String genre, int tahunTerbit) {
+    public Novel(String judul, String penulis, String genre, int tahunTerbit) throws Exception {
+        if (tahunTerbit < 1 || tahunTerbit > 2026) {
+            throw new Exception("Tahun terbit harus berada pada rentang 1–2026.");
+        }
+        
         this.judul = judul;
         this.penulis = penulis;
         this.genre = genre;

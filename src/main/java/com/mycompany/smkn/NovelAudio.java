@@ -14,8 +14,11 @@ public class NovelAudio extends Novel implements DapatDiberiRating, DapatDikelol
     private double rating;
     private boolean sudahDibaca;
 
-    public NovelAudio(String judul, String penulis, String genre, int tahunTerbit,int durasiMenit, String narator) {
+    public NovelAudio(String judul, String penulis, String genre, int tahunTerbit,int durasiMenit, String narator) throws Exception {
         super(judul, penulis, genre, tahunTerbit);
+        if (tahunTerbit < 1 || tahunTerbit > 2026) {
+            throw new Exception("Tahun terbit harus berada pada rentang 1–2026.");
+        }
         this.durasiMenit = durasiMenit;
         this.narator = narator;
         this.rating = 0.0;

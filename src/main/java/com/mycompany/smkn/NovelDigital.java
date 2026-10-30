@@ -14,8 +14,11 @@ public class NovelDigital extends Novel implements DapatDiberiRating, DapatDikel
     private double rating;
     private boolean sudahDibaca;
 
-    public NovelDigital(String judul, String penulis, String genre,int tahunTerbit, String formatFile, double ukuranFile) {
+    public NovelDigital(String judul, String penulis, String genre,int tahunTerbit, String formatFile, double ukuranFile) throws Exception {
         super(judul, penulis, genre, tahunTerbit);
+        if (tahunTerbit < 1 || tahunTerbit > 2026) {
+            throw new Exception("Tahun terbit harus berada pada rentang 1–2026.");
+        }
         this.formatFile = formatFile;
         this.ukuranFile = ukuranFile;
     }
