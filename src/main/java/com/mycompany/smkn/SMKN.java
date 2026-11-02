@@ -4,8 +4,6 @@
 
 package com.mycompany.smkn;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.InputMismatchException;
 import java.util.Scanner;
 
@@ -14,45 +12,25 @@ import java.util.Scanner;
  * @author Naila Salsa
  */
 public class SMKN {
-
-    public static void cariNovel(String judul, ArrayList<Novel> daftarNovel) throws Exception {
-
-        System.out.println("Mencari Novel dengan Judul: " + judul);
-        boolean ditemukan = false;
-
-        for (int i = 0; i < daftarNovel.size(); i++) {
-            if (daftarNovel.get(i).getJudul()
-                    .equalsIgnoreCase(judul)) {
-
-                daftarNovel.get(i).tampilkanInfo();
-                ditemukan = true;
-            }
-        }
-
-        if (!ditemukan) {
-            throw new Exception("Novel dengan judul '" + judul + "' tidak ditemukan di sistem.");
-        }
-    }
-
     public static void main(String[] args) {
         Scanner scanner = new Scanner(System.in);
 
-        ArrayList<Novel> daftarNovel = new ArrayList<>();
-        HashMap<String, String> dataAnggota = new HashMap<>();
+        Perpustakaan perpusNovel = new Perpustakaan("Koleksi Novel Lavender");
+        perpusNovel.bukaPerpustakaan();
 
         boolean isRunning = true;
 
         System.out.println("=============================================");
-        System.out.println(" SISTEM MANAJEMEN KOLEKSI NOVEL (SMKN) ");
+        System.out.println("            SELAMAT DATANG DI SMKN           ");
         System.out.println("=============================================");
 
         while (isRunning) {
             System.out.println("\nMenu Utama:");
-            System.out.println("1. Tambah Novel");
-            System.out.println("2. Lihat Daftar Novel");
-            System.out.println("3. Cari Novel (Custom Exception)");
-            System.out.println("4. Kelola Rating dan Status Baca");
-            System.out.println("5. Manajemen Anggota (HashMap)");
+            System.out.println("1. Tambah Koleksi Novel");
+            System.out.println("2. Lihat Daftar Koleksi Novel");
+            System.out.println("3. Cari Novel");
+            System.out.println("4. Manajemen Anggota");
+            System.out.println("5. Peminjaman Novel (Demo Association)");
             System.out.println("6. Keluar");
             System.out.print("Pilih Menu (1-6): ");
 
@@ -61,16 +39,21 @@ public class SMKN {
                 scanner.nextLine();
 
                 switch (pilihan) {
-
+                    
                     case 1 -> {
                         System.out.println("\n--- Pilih Jenis Novel ---");
                         System.out.println("1. Novel Fisik");
                         System.out.println("2. Novel Digital");
                         System.out.println("3. Novel Audio");
                         System.out.print("Pilih jenis (1-3): ");
-
+                        
                         int jenis = scanner.nextInt();
                         scanner.nextLine();
+
+                        if (jenis < 1 || jenis > 3) {
+                            System.out.println("Pilihan jenis novel tidak valid!");
+                            break;
+                        }
 
                         System.out.print("Masukkan Judul: ");
                         String judul = scanner.nextLine();
@@ -85,266 +68,160 @@ public class SMKN {
                         int tahun = scanner.nextInt();
                         scanner.nextLine();
 
-                        Novel novelBaru;
-
                         if (jenis == 1) {
-                            System.out.print("Jumlah Halaman: ");
+                            System.out.print("Masukkan Jumlah Halaman: ");
                             int halaman = scanner.nextInt();
                             scanner.nextLine();
 
-                            System.out.print("Kondisi Novel: ");
+                            System.out.print("Masukkan Kondisi Novel: ");
                             String kondisi = scanner.nextLine();
 
-                            novelBaru = new NovelFisik(
-                                judul, penulis, genre, tahun,
-                                halaman, kondisi
+                            perpusNovel.tambahNovel(
+                                new NovelFisik(judul, penulis, genre, tahun, halaman, kondisi)
                             );
 
                         } else if (jenis == 2) {
-                            System.out.print("Ukuran File (MB): ");
-                            double ukuran = scanner.nextDouble();
+                            System.out.print("Masukkan Format File: ");
+                            String formatFile = scanner.nextLine();
+
+                            System.out.print("Masukkan Ukuran File (MB): ");
+                            double ukuranFile = scanner.nextDouble();
                             scanner.nextLine();
 
-                            System.out.print("Format File: ");
-                            String format = scanner.nextLine();
-
-                            novelBaru = new NovelDigital(
-                                judul, penulis, genre, tahun,
-                                format, ukuran
-                            );
+                            perpusNovel.tambahNovel(new NovelDigital(judul, penulis, genre, tahun, formatFile, ukuranFile));
 
                         } else if (jenis == 3) {
-                            System.out.print("Durasi Audio (menit): ");
+                            System.out.print("Masukkan Durasi (menit): ");
                             int durasi = scanner.nextInt();
                             scanner.nextLine();
 
-                            System.out.print("Nama Narator: ");
+                            System.out.print("Masukkan Nama Narator: ");
                             String narator = scanner.nextLine();
 
-                            novelBaru = new NovelAudio(
-                                judul, penulis, genre, tahun,
-                                durasi, narator
-                            );
-
-                        } else {
-                            throw new Exception("Jenis novel harus dipilih dari 1 sampai 3.");
+                            perpusNovel.tambahNovel(new NovelAudio(judul, penulis, genre, tahun, durasi, narator));
                         }
 
-                        daftarNovel.add(novelBaru);
-
-                        System.out.println("Sukses! Novel berhasil ditambahkan.");
-                        System.out.println("Total novel dalam daftar: " + daftarNovel.size());
+                        System.out.println("Sukses! Novel berhasil ditambahkan. (Total Novel: " + perpusNovel.getJumlahNovel() + ")");
                     }
 
                     case 2 -> {
                         System.out.println("\n--- Daftar Koleksi Novel ---");
-
-                        if (daftarNovel.isEmpty()) {
-                            System.out.println("Belum ada novel yang tersimpan.");
-                        } else {
-                            for (int i = 0;
-                                 i < daftarNovel.size(); i++) {
-
-                                System.out.print((i + 1) + ". ");
-                                daftarNovel.get(i).tampilkanInfo();
-                            }
-
-                            System.out.println("Total novel dalam daftar: " + daftarNovel.size());
-                        }
+                        perpusNovel.lihatSemuaNovel();
                     }
 
                     case 3 -> {
                         System.out.println("\n--- Fitur Cari Novel ---");
-                        System.out.print("Masukkan Judul: ");
+                        System.out.print("Masukkan Judul Novel: ");
                         String kataKunci = scanner.nextLine();
 
-                        try {
-                            cariNovel(kataKunci, daftarNovel);
-                        } catch (KoleksiTidakDitemukanException e) {
-                            System.out.println("Peringatan: " + e.getMessage());
-                        } finally {
-                            System.out.println("Sesi pencarian selesai dieksekusi.");
+                        boolean ditemukan = false;
+
+                        for (int i = 0; i < perpusNovel.getJumlahNovel(); i++) {
+                            Novel novel = perpusNovel.getNovelInt(i);
+
+                            if (novel.getJudul().equalsIgnoreCase(kataKunci)) {
+                                System.out.println("\nNovel ditemukan:");
+                                novel.tampilkanInfo();
+                                ditemukan = true;
+                            }
+                        }
+
+                        if (!ditemukan) {
+                            System.out.println("Novel dengan judul \"" + kataKunci + "\" tidak ditemukan.");
                         }
                     }
 
                     case 4 -> {
-                        if (daftarNovel.isEmpty()) {
-                            System.out.println("Belum ada novel. Tambahkan novel terlebih dahulu.");
-                            break;
-                        }
-
-                        System.out.println("\n--- Kelola Rating dan Status Baca ---");
-
-                        for (int i = 0; i < daftarNovel.size(); i++) {
-                            System.out.print((i + 1) + ". ");
-                            daftarNovel.get(i).tampilkanInfo();
-                        }
-
-                        System.out.print("Pilih nomor novel yang akan dikelola: ");
-                        int nomor = scanner.nextInt();
+                        System.out.println("\n-- Kelola Anggota --");
+                        System.out.println("1. Tambah Anggota");
+                        System.out.println("2. Cari Anggota");
+                        System.out.println("3. Lihat Semua Anggota");
+                        System.out.print("Pilih: ");
+                        int menuA = scanner.nextInt();
                         scanner.nextLine();
 
-                        if (nomor < 1 || nomor > daftarNovel.size()) {
-                            throw new Exception("Nomor novel tidak tersedia.");
-                        }
+                        if (menuA == 1) {
+                            System.out.print("Masukkan NPM: ");
+                            String npm = scanner.nextLine();
 
-                        Novel novel = daftarNovel.get(nomor - 1);
+                            System.out.print("Masukkan Nama: ");
+                            String nama = scanner.nextLine();
 
-                        System.out.println("\nNovel dipilih: " + novel.getJudul());
-                        System.out.println("1. Beri Rating");
-                        System.out.println("2. Tandai Sudah Dibaca");
-                        System.out.println("3. Tandai Belum Dibaca");
-                        System.out.println("4. Lihat Rating dan Status Baca");
-                        System.out.print("Pilih tindakan: ");
+                            perpusNovel.tambahAnggota(new Anggota(npm, nama));
 
-                        int tindakan = scanner.nextInt();
-                        scanner.nextLine();
+                        } else if (menuA == 2) {
+                            System.out.print("NPM yang dicari: ");
+                            String npm = scanner.nextLine();
 
-                        switch (tindakan) {
-                            case 1 -> {
-                                if (novel instanceof DapatDiberiRating) {
-                                    System.out.print("Masukkan rating (0-5): ");
-                                    double rating = scanner.nextDouble();
-                                    scanner.nextLine();
+                            Anggota anggota = perpusNovel.cariAnggota(npm);
 
-                                    if (rating < 0 || rating > 5) {
-                                        throw new IllegalArgumentException("Rating harus antara 0 sampai 5.");
-                                    }
-
-                                    DapatDiberiRating objekRating =
-                                        (DapatDiberiRating) novel;
-
-                                    objekRating.beriRating(rating);
-
-                                    System.out.println("Rating berhasil diberikan.");
-                                    System.out.println("Rating saat ini: " + objekRating.getRating());
-                                } else {
-                                    System.out.println("Novel ini tidak mendukung fitur rating.");
-                                }
+                            if (anggota != null) {
+                                System.out.println("\nAnggota ditemukan:");
+                                anggota.tampilkanInfo();
+                            } else {
+                                System.out.println(
+                                    "Anggota dengan NPM tersebut tidak ditemukan."
+                                );
                             }
 
-                            case 2 -> {
-                                if (novel instanceof DapatDikelola) {
-                                    DapatDikelola statusBaca =
-                                        (DapatDikelola) novel;
+                        } else if (menuA == 3) {
+                            perpusNovel.lihatSemuaAnggota();
 
-                                    statusBaca.tandaiDibaca();
-                                    System.out.println("Novel ditandai sudah dibaca.");
-                                } else {
-                                    System.out.println("Novel ini tidak mendukung status baca.");
-                                }
-                            }
-
-                            case 3 -> {
-                                if (novel instanceof DapatDikelola) {
-                                    DapatDikelola statusBaca =
-                                        (DapatDikelola) novel;
-
-                                    statusBaca.tandaiBelumDibaca();
-                                    System.out.println("Novel ditandai belum dibaca.");
-                                } else {
-                                    System.out.println("Novel ini tidak mendukung status baca.");
-                                }
-                            }
-
-                            case 4 -> {
-                                if (novel instanceof DapatDiberiRating) {
-                                    DapatDiberiRating objekRating =
-                                        (DapatDiberiRating) novel;
-
-                                    System.out.println("Rating: " + objekRating.getRating()
-                                    );
-                                } else {
-                                    System.out.println("Fitur rating tidak tersedia.");
-                                }
-
-                                if (novel instanceof DapatDikelola) {
-                                    DapatDikelola statusBaca =
-                                        (DapatDikelola) novel;
-
-                                    System.out.println("Status baca: " + (statusBaca.isSudahDibaca() ? "Sudah dibaca" : "Belum dibaca"));
-                                } else {
-                                    System.out.println("Fitur status baca tidak tersedia.");
-                                }
-                            }
-
-                            default -> System.out.println("Pilihan tindakan tidak valid.");
+                        } else {
+                            System.out.println("Pilihan menu anggota tidak valid!");
                         }
                     }
 
                     case 5 -> {
-                        System.out.println("\n--- Manajemen Anggota (HashMap) ---");
-                        System.out.println("1. Tambah Anggota");
-                        System.out.println("2. Cari Anggota via NPM");
-                        System.out.println("3. Tampilkan Semua Anggota");
-                        System.out.print("Pilih: ");
+                        System.out.println("\n-- Sistem Peminjaman (Association) --");
+                        System.out.print("Masukkan NPM Peminjam: ");
+                        String inputNpm = scanner.nextLine();
 
-                        int menuAnggota = scanner.nextInt();
-                        scanner.nextLine();
+                        Anggota peminjam = perpusNovel.getAnggota(inputNpm);
 
-                        if (menuAnggota == 1) {
-                            System.out.print("Masukkan NPM: ");
-                            String npm = scanner.nextLine().trim();
+                        if (peminjam == null) {
+                            System.out.println("Gagal: Anggota belum terdaftar!");
 
-                            System.out.print("Masukkan Nama Lengkap: ");
-                            String nama = scanner.nextLine().trim();
-
-                            if (npm.isEmpty() || nama.isEmpty()) {
-                                throw new Exception("NPM dan nama tidak boleh kosong.");
-                            }
-
-                            if (dataAnggota.containsKey(npm)) {
-                                throw new Exception("NPM sudah terdaftar.");
-                            }
-
-                            dataAnggota.put(npm, nama);
-                            System.out.println("Anggota berhasil ditambahkan.");
-
-                        } else if (menuAnggota == 2) {
-                            System.out.print("Masukkan NPM yang dicari: ");
-                            String cariNpm = scanner.nextLine().trim();
-
-                            if (dataAnggota.containsKey(cariNpm)) {
-                                System.out.println("Nama anggota: " + dataAnggota.get(cariNpm));
-                            } else {
-                                System.out.println("Anggota tidak ditemukan.");
-                            }
-
-                        } else if (menuAnggota == 3) {
-                            System.out.println("Total anggota: " + dataAnggota.size());
-
-                            for (String npm : dataAnggota.keySet()) {
-                                System.out.println("NPM: " + npm + " | Nama: " + dataAnggota.get(npm));
-                            }
+                        } else if (perpusNovel.getJumlahNovel() == 0) {
+                            System.out.println("Gagal: Belum ada novel yang bisa dipinjam.");
 
                         } else {
-                            System.out.println("Pilihan menu anggota tidak valid." );
+                            perpusNovel.lihatSemuaNovel();
+
+                            System.out.print("Pilih Nomor Novel yang ingin dipinjam: ");
+                            int noNovel = scanner.nextInt() - 1;
+                            scanner.nextLine();
+
+                            if (noNovel >= 0 && noNovel < perpusNovel.getJumlahNovel()) {
+                                Novel novelDipinjam = perpusNovel.getNovelInt(noNovel);
+
+                                TransaksiPeminjaman transaksi = new TransaksiPeminjaman();
+                                transaksi.prosesPinjam(peminjam, novelDipinjam);
+
+                            } else {
+                                System.out.println("Nomor novel tidak valid!");
+                            }
                         }
                     }
 
                     case 6 -> {
-                        System.out.println("Terima kasih telah menggunakan SMKN!" );
+                        System.out.println("Terima kasih telah menggunakan SMKN!");
                         isRunning = false;
                     }
 
-                    default -> System.out.println("Pilihan menu tidak valid.");
+                    default -> System.out.println("Pilihan tidak valid.");
                 }
 
             } catch (InputMismatchException e) {
-                System.out.println("\n[ERROR INPUT] Masukkan angka dengan format yang benar.");
+                System.out.println(
+                    "\n[ERROR INPUT] Input tidak valid! Masukkan angka sesuai petunjuk."
+                );
                 scanner.nextLine();
 
-            } catch (KoleksiTidakDitemukanException e) {
-                System.out.println("\n[ERROR DATA] " + e.getMessage());
-
-            } catch (IllegalArgumentException e) {
-                System.out.println("\n[ERROR INPUT] " + e.getMessage());
-
             } catch (Exception e) {
-                System.out.println("\n[ERROR SISTEM] " + e.getMessage());
-
-            } finally {
-                System.out.println("Proses menu selesai ditangani.");
+                System.out.println(
+                    "\n[ERROR SISTEM] Terjadi kesalahan: " + e.getMessage()
+                );
             }
         }
 
